@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudySpark - Home</title>
+  <style>
+    /* Reset and Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
+      color: #333;
+      transition: background 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+    }
+
+    body.dark-mode {
+      background: linear-gradient(135deg, #1A202C, #2D3748);
+      color: #E2E8F0;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4A90E2;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: inherit;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(74, 144, 226, 0.2);
+      color: #4A90E2;
+    }
+
+    #mode-toggle {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: inherit;
+      transition: transform 0.3s ease;
+    }
+
+    #mode-toggle:hover {
+      transform: rotate(15deg);
+    }
+
+    /* Hamburger Menu */
+    .hamburger {
+      display: none;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .nav-links.active {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      animation: slideIn 0.3s ease-in;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 50px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin: 20px auto;
+      max-width: 1200px;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: inherit;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .hero .cta-button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #4A90E2;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .hero .cta-button:hover {
+      background: #357ABD;
+      transform: translateY(-2px);
+    }
+
+    /* Content Preview Section */
+    .content-preview {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .preview-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease, background 0.3s ease;
+      position: relative;
+      animation: slideIn 0.5s ease-in;
+      animation-delay: calc(var(--i) * 0.1s);
+    }
+
+    .preview-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .preview-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .preview-card p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    /* Locked Content */
+    .preview-card.locked {
+      filter: blur(5px);
+    }
+
+    .locked-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      text-align: center;
+      border-radius: 12px;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .locked-overlay a {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #4A90E2;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .locked-overlay a:hover {
+      background: #357ABD;
+    }
+
+    /* Subject Selector */
+    #subject-selector {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: inherit;
+      width: 100%;
+      max-width: 300px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    #subject-selector:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-wrap: wrap;
+      }
+      .hamburger {
+        display: block;
+      }
+      .nav-links {
+        display: none;
+        width: 100%;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+      #subject-selector {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky Navigation -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">StudySpark</div>
+      <button class="hamburger">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="grade9.html">Grade 9</a></li>
+        <li><a href="premium.html">Go Premium</a></li>
+        <li><a href="#" id="login-btn">Log in with Telegram</a></li>
+        <li><button id="mode-toggle">🌙</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Ignite Your Learning Journey!</h1>
+    <p>Explore Worksheets, Videos, Past Exams, and more tailored for Grade 9 & Freshman students.</p>
+    <a href="premium.html" class="cta-button">Get Started with Premium</a>
+  </section>
+
+  <!-- Subject Selector -->
+  <select id="subject-selector">
+    <option value="all">All Subjects</option>
+    <option value="Math">Math</option>
+    <option value="Science">Science</option>
+  </select>
+
+  <!-- Content Preview Section -->
+  <section class="content-preview" id="content-preview">
+    <!-- Cards will be populated by JavaScript -->
+  </section>
+
+  <!-- Telegram WebApp and JavaScript -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    // Initialize Telegram WebApp
+    const telegram = window.Telegram.WebApp;
+    telegram.ready();
+
+    // Hamburger Menu Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.textContent = navLinks.classList.contains('active') ? '✖' : '☰';
+    });
+
+    // Dark/Light Mode Toggle
+    const modeToggle = document.getElementById('mode-toggle');
+    modeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      modeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      modeToggle.textContent = '☀️';
+    }
+
+    // Check premium status
+    async function checkPremiumStatus() {
+      const username = telegram.initDataUnsafe.user?.username;
+      if (!username) {
+        showLoginPrompt();
+        return false;
+      }
+      try {
+        const response = await fetch('https://raw.githubusercontent.com/yourusername/studyspark/main/data/premium_users.json');
+        const premiumUsers = await response.json();
+        return premiumUsers.includes(username);
+      } catch (error) {
+        console.error('Error checking premium status:', error);
+        return false;
+      }
+    }
+
+    // Show login prompt
+    function showLoginPrompt() {
+      const loginBtn = document.getElementById('login-btn');
+      loginBtn.style.display = 'block';
+      loginBtn.addEventListener('click', () => {
+        telegram.openTelegramLink('https://t.me/StudySparkBot?start=login');
+      });
+    }
+
+    // Load content previews
+    async function loadContentPreviews(subject = 'all') {
+      const isPremium = await checkPremiumStatus();
+      const previewContainer = document.getElementById('content-preview');
+      const contentTypes = [
+        { title: 'Worksheets', description: 'Practice with downloadable PDFs.', link: 'resources.html#worksheets' },
+        { title: 'Videos', description: 'In-depth tutorials for all subjects.', link: 'grade9.html' },
+        { title: 'Short Videos', description: 'Quick, TikTok-style learning clips.', link: 'shorts.html' },
+        { title: 'Past Exams', description: 'Prepare with real exam questions.', link: 'resources.html#exams' },
+        { title: 'Books', description: 'Access digital textbooks.', link: 'resources.html#books' },
+        { title: 'Teacher Guides', description: 'Resources for educators.', link: 'resources.html#guides' },
+        { title: 'Study Methods', description: 'Learn effective study techniques.', link: 'resources.html#methods' },
+        { title: 'Ask a Question', description: 'Get help via Telegram.', link: 'ask.html' }
+      ];
+
+      previewContainer.innerHTML = contentTypes.map((content, index) => `
+        <div class="preview-card ${isPremium ? '' : 'locked'}" style="--i: ${index}">
+          <h3>${content.title}</h3>
+          <p>${content.description}</p>
+          ${isPremium ? `<a href="${content.link}">Explore Now</a>` : 
+            '<div class="locked-overlay">Upgrade to Premium to Unlock!<br><a href="premium.html">Go Premium</a></div>'}
+        </div>
+      `).join('');
+    }
+
+    // Subject selector
+    const subjectSelector = document.getElementById('subject-selector');
+    subjectSelector.addEventListener('change', (e) => {
+      loadContentPreviews(e.target.value);
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadContentPreviews('all');
+    });
+  </script>
+</body>
+</html>
